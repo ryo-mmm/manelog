@@ -1,0 +1,275 @@
+/* manelog/frontend/src/styles/app.css */
+
+/* 1. リセットCSS (sanitize.css) のインポートを想定 */
+@import url('./sanitize.css');
+
+/* 2. CSS変数によるデザイン・品質基準の定義 */
+:root {
+    /* ------------------------------------------- */
+    /* 配色計画: #FFFFFF (70%), #0066CC (25%), #FFC107 (5%) */
+    /* ------------------------------------------- */
+
+    /* ベースカラー (70%): クリーンでデジタル感のある北欧デザインのシンプルさ  */
+    --color-base: #FFFFFF;
+    /* 背景、カードの基本色 */
+    --color-surface: #F8F8F8;
+    /* 僅かな影や区切り線の背景色 */
+    --color-text-primary: #333333;
+    /* 標準テキスト */
+    --color-text-secondary: #666666;
+    /* サブテキスト */
+
+    /* メインカラー (25%): 信頼感、プロフェッショナルさ、「未来」を象徴  */
+    --color-main: #0066CC;
+    --color-main-light: #3385D6;
+    /* ホバー用 */
+    --color-main-dark: #004D99;
+    /* アクティブ/強調用 */
+    --color-main-text-on: #FFFFFF;
+    /* メインカラー上のテキスト色 */
+
+    /* アクセントカラー (5%): CV (ユーザー登録) に直結するCTAボタンにのみ使用  */
+    --color-accent: #FFC107;
+    --color-accent-dark: #E6AC00;
+    /* ボタンの押下時/フォーカス時 */
+    /* アクセントカラー上のテキストは、WCAG AA確保のため、コントラストの高いダークカラーを推奨 */
+    --color-text-on-accent: #333333;
+
+    /* ------------------------------------------- */
+    /* 品質基準: 余白の原則 (8の倍数) [8の倍数の余白規則] */
+    /* ------------------------------------------- */
+    --spacing-unit: 8px;
+    /* 最小単位を定義 */
+    --spacing-sm: var(--spacing-unit);
+    /* 8px */
+    --spacing-md: calc(var(--spacing-unit) * 2);
+    /* 16px */
+    --spacing-lg: calc(var(--spacing-unit) * 3);
+    /* 24px */
+    --spacing-xl: calc(var(--spacing-unit) * 4);
+    /* 32px */
+
+    /* ------------------------------------------- */
+    /* レイアウトとブレイクポイント (モバイルファースト) [WCAGのAAレベル] */
+    /* ------------------------------------------- */
+    --breakpoint-tablet: 768px;
+    --breakpoint-desktop: 1024px;
+}
+
+/* ========================================================================= */
+/* 1. AppLayoutTemplate: アプリケーション全体のレイアウト (2カラム) */
+/* ========================================================================= */
+
+.AppLayout {
+    /* モバイルファースト: 既定ではシングルカラム（サイドバーは非表示/折りたたみ前提） */
+    display: block;
+    min-height: 100vh;
+    background-color: var(--color-surface);
+    /* わずかに色をつけ、コンテンツを際立たせる */
+}
+
+/* 8の倍数の余白規則: すべてのコンテンツには外側に余白を設ける */
+.AppLayout__mainContent {
+    padding: var(--spacing-md);
+    /* 16px */
+}
+
+/* BEM解説: AppLayoutTemplate のコンポーネント構造は以下の通り
+ * .AppLayout: 最上位のラッパー
+ * .AppLayout__sidebar: ナビゲーション（左固定）
+ * .AppLayout__mainContent: コンテンツ表示エリア
+ */
+
+/* ------------------------------------------- */
+/* @media: Tablet (768px) 以上で2カラム固定に移行 */
+/* ------------------------------------------- */
+@media (min-width: 768px) {
+
+    /* WCAGのAAレベルを確保しつつ、広い画面で効率的な情報配置を行う */
+    .AppLayout {
+        display: grid;
+        /* Sidebar (240px: 8の倍数) と MainContent (残りの幅) の定義 */
+        grid-template-columns: 240px 1fr;
+    }
+
+    /* 固定サイドバー: 画面スクロール時にナビゲーションが常に利用可能 */
+    .AppLayout__sidebar {
+        grid-column: 1 / 2;
+        position: fixed;
+        /* 左に固定 */
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 240px;
+        background-color: var(--color-base);
+        /* 白 (#FFFFFF) で清潔感を強調 */
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+        /* 視覚的階層の分離 */
+        padding-top: var(--spacing-xl);
+        /* 32px */
+    }
+
+    /* メインコンテンツエリアはサイドバーの幅分ずらす */
+    .AppLayout__mainContent {
+        grid-column: 2 / 3;
+        margin-left: 240px;
+        /* サイドバーの幅に合わせて調整 */
+        padding: var(--spacing-lg);
+        /* 24px に増やし、広々とした印象に */
+    }
+}
+
+/* ========================================================================= */
+/* 2. Dashboard__grid: ダッシュボードのマルチカラムグリッド */
+/* ========================================================================= */
+
+.Dashboard__grid {
+    display: grid;
+    /* 8の倍数の余白規則: グリッド間の隙間にも適用 */
+    gap: var(--spacing-md);
+    /* 16px */
+    margin-top: var(--spacing-lg);
+    /* 上部に24pxの余白 */
+
+    /* モバイルファースト: 既定ではすべて単一のカラム */
+    grid-template-columns: 1fr;
+}
+
+/* 要素: 全幅アイテム */
+.Dashboard__gridItem--full {
+    grid-column: 1 / -1;
+    /* 全てのカラムを占有 */
+}
+
+/* ------------------------------------------- */
+/* @media: Tablet (768px) 以上 */
+/* ------------------------------------------- */
+@media (min-width: 768px) {
+
+    /* 2カラム構成: 情報密度を高める */
+    .Dashboard__grid {
+        /* 均等な2カラム。必要に応じて 3:1 や 2:1 の非対称グリッドも採用可能 */
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+        /* 24px */
+    }
+
+    /* Dashboard__gridItem--lg (AnalysisSummaryBlockを想定) */
+    /* 2カラムのうち1つを占有 (デフォルト設定) */
+    .Dashboard__gridItem--lg {
+        grid-column: span 1;
+    }
+
+    /* Dashboard__gridItem--sm (GoalProgressBlockを想定) */
+    .Dashboard__gridItem--sm {
+        grid-column: span 1;
+    }
+
+    /* 補足: 2カラムに収まらない要素を3列目の下に配置する場合 (例: .Dashboard__gridItem--full) */
+}
+
+/* ------------------------------------------- */
+/* @media: Desktop (1024px) 以上 */
+/* ------------------------------------------- */
+@media (min-width: 1024px) {
+
+    /* 3カラム構成: 情報量を最大化する */
+    .Dashboard__grid {
+        grid-template-columns: 2fr 1fr 1fr;
+        /* 例: 2:1:1 の非対称グリッドを採用し、AnalysisSummaryBlockを左に大きく配置 */
+    }
+
+    /* Dashboard__gridItem--lg (AnalysisSummaryBlock) */
+    /* 大量のグラフを表示するため、2つのカラムを占有させる */
+    .Dashboard__gridItem--lg {
+        grid-column: span 2;
+    }
+
+    /* Dashboard__gridItem--sm (GoalProgressBlock) */
+    /* 1つのカラムを占有 */
+    .Dashboard__gridItem--sm {
+        grid-column: span 1;
+    }
+
+    /* 全幅アイテムは、全てのカラムを占有 (3カラム分) */
+    .Dashboard__gridItem--full {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ========================================================================= */
+/* AppLayout へのモバイル制御の追加 */
+/* ========================================================================= */
+
+.Sidebar__toggleButton {
+    /* モバイルでのみ表示 */
+    position: fixed;
+    top: var(--spacing-md);
+    /* 16px */
+    left: var(--spacing-md);
+    /* 16px */
+    z-index: 1000;
+    display: block;
+    /* モバイルでは表示 */
+    padding: var(--spacing-sm);
+    /* 8px */
+    border: none;
+    background-color: var(--color-main);
+    color: var(--color-main-text-on);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.AppLayout__sidebar {
+    /* モバイルでは画面外に隠しておく */
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+    z-index: 999;
+}
+
+/* 修飾子: サイドバーが開いている状態 */
+.AppLayout--sidebarOpen .AppLayout__sidebar {
+    transform: translateX(0);
+    /* 画面内にスライドイン */
+}
+
+/* メインコンテンツは、モバイルではトグルボタンのスペースを空ける */
+.AppLayout__mainContent {
+    padding-top: calc(var(--spacing-md) + 32px);
+    /* トグルボタンの高さ分加算 */
+}
+
+.AppLayout__overlay {
+    /* モバイルでサイドバーが開いたとき、メインコンテンツを暗くするオーバーレイ */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    display: block;
+}
+
+
+@media (min-width: 768px) {
+
+    /* タブレット以上では全て非表示/無効化 */
+    .Sidebar__toggleButton {
+        display: none;
+    }
+
+    .AppLayout__sidebar {
+        transform: translateX(0);
+        /* 固定位置に戻す */
+    }
+
+    .AppLayout__mainContent {
+        padding-top: var(--spacing-lg);
+        /* 通常のパディングに戻す */
+    }
+
+    .AppLayout__overlay {
+        display: none;
+    }
+}
