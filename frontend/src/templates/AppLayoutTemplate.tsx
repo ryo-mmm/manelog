@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SidebarNavigation from '../components/organisms/SidebarNavigation'; // ナビゲーションコンポーネントを想定
+import SidebarNavigation from '../components/organisms/SidebarNavigation';
 
 interface AppLayoutProps {
     children: React.ReactNode;

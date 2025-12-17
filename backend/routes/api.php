@@ -2,14 +2,20 @@
 
 use App\Http\Controllers\Api\AnalysisController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PredictionController;
+use App\Http\Controllers\Api\SavingGoalController;
 
-// Sanctumミドルウェアを適用し、認証済みユーザーのみアクセス可能とする
-// 認証には Laravel SanctumのSPA認証 (Cookieベース) を推奨
 Route::middleware('auth:sanctum')->group(function () {
     // コア機能1: 支出パターン分析
     // GET /api/analysis/patterns
     Route::get('analysis/patterns', [AnalysisController::class, 'getSpendingPatterns']);
 
     // 他のAPIエンドポイントもここに追加されます
-    // 例: Route::get('goals', [GoalController::class, 'index']);
+    Route::get('analysis/patterns', [AnalysisController::class, 'getSpendingPatterns']);
+
+    // コア機能3: 未来予測用ベースデータ取得
+    Route::get('prediction/base-data', [PredictionController::class, 'getBaseData']);
+
+    // 目標管理（バケット）
+    Route::apiResource('saving-goals', SavingGoalController::class);
 });
